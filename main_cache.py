@@ -47,9 +47,9 @@ if __name__ == "__main__":
     i = 'gcc-1K.memtrace'
     path_data = os.path.join(path_base, i)
 
-    cs = 4096
-    bs = 32  # bs = 2^bits_bs
-    w = 1
+    cs = 16
+    bs = 2  # bs = 2^bits_bs
+    w = 4
     cache, decoder = factory(cs, bs, w)
 
     # str_instruction = 'L 8 12ff228'
@@ -58,7 +58,8 @@ if __name__ == "__main__":
 
     with open(path_data,'r') as file:
         strs_instruction = file.read().splitlines()
-        for str_instruction in tqdm(strs_instruction):
+        for str_instruction in strs_instruction:
+        # for str_instruction in tqdm(strs_instruction):
         # for i, str_instruction in enumerate(strs_instruction[:]):
         #     print('[{}]: {}'.format(i, str_instruction))
             action = decoder.decode(str_instruction)

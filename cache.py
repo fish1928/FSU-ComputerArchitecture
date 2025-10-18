@@ -47,8 +47,16 @@ class LineDataWayCache:
 
     def store(self, index, offset, tag):
         data_ways_all = self.cache[index][offset]   # size->(n_ways,)
-        indicate_least_use = self.lru.find_and_replace(index)
-        data_ways_all[indicate_least_use] = tag
+        indicates_hit = np.where(data_ways_all == tag)[0]
+
+        if indicates_hit.size == 0: # is miss when updating
+            indicate_least_use = self.lru.find_and_replace(index)
+            data_ways_all[indicate_least_use] = tag
+            return self.__class__.INDICATE_MISS
+        else:                       # is hit
+            self.lru.use(index, indicates_hit[0])
+            return indicates_hit[0]
+        # end
     # end
 # end
 

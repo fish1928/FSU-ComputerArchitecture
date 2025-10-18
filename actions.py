@@ -69,6 +69,9 @@ class LoadAction(Action):
         indicate_miss = cache.load(self.index, self.offset, self.tag)
         if cache.is_a_miss(indicate_miss):
             Action.add_miss()
+        #     print('miss: {} {} {}'.format(self.index, self.offset, self.tag))
+        # # else:
+        #     print('hit: {} {} {}'.format(self.index, self.offset, self.tag))
         # end
     # end
 # end
@@ -81,6 +84,9 @@ class StoreAction(Action):
     # end
 
     def execute(self, cache: LineDataWayCache):
-        cache.store(self.index, self.offset, self.tag)
+        indicate_miss = cache.store(self.index, self.offset, self.tag)
+        if cache.is_a_miss(indicate_miss):
+            Action.add_miss()
+        # end
     # end
 # end
