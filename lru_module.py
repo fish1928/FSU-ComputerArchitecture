@@ -100,7 +100,7 @@ class LRULine():
     # end
 
     def inspect(self):
-        [u.get_id() for u in self.tail]
+        return [u.get_id() for u in self.tail]
     # end
 
     def get_head(self):

@@ -38,23 +38,31 @@ class LineDataWayCache:
         data_ways_all = self.cache[index][offset]   # size->(n_ways,)
         indicates_hit = np.where(data_ways_all == tag)[0]
         if indicates_hit.size == 0: # is miss
+            print('LineDataWayCache: load, {}'.format(self.lru.index_lines[0].inspect()))
+            print('LineDataWayCache: load, {}'.format(data_ways_all))
             return self.__class__.INDICATE_MISS # return and do nothing
         else:                    # is hit
             self.lru.use(index, indicates_hit[0])  # use the first(logically) hit
+            print('LineDataWayCache: load, {}'.format(self.lru.index_lines[0].inspect()))
+            print('LineDataWayCache: load, {}'.format(data_ways_all))
             return indicates_hit[0]
         # end
     # end
 
     def store(self, index, offset, tag):
+
         data_ways_all = self.cache[index][offset]   # size->(n_ways,)
         indicates_hit = np.where(data_ways_all == tag)[0]
-
         if indicates_hit.size == 0: # is miss when updating
             indicate_least_use = self.lru.find_and_replace(index)
+            print('LineDataWayCache: store, {}'.format(self.lru.index_lines[0].inspect()))
             data_ways_all[indicate_least_use] = tag
+            print('LineDataWayCache: store, {}'.format(data_ways_all))
             return self.__class__.INDICATE_MISS
         else:                       # is hit
             self.lru.use(index, indicates_hit[0])
+            print('LineDataWayCache: store, {}'.format(self.lru.index_lines[0].inspect()))
+            print('LineDataWayCache: store, {}'.format(data_ways_all))
             return indicates_hit[0]
         # end
     # end

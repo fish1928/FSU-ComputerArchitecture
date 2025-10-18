@@ -20,9 +20,8 @@ class InstructionDecoder:
         int_index = int(address_32bits[self.bits_tag:self.bits_tag + self.bits_index], 2) if self.bits_index else 0
         int_offset = int(address_32bits[self.bits_tag + self.bits_index:], 2)
 
-        # if int_offset % 2 == 1:
-        #     print('     Decoded as {} tag: {}/{}({}), index: {}/{}({}), offset: {}/{}({})\n'.format(
-        #         action, int_tag, pow(2, self.bits_tag), self.bits_tag, int_index, pow(2,self.bits_index), self.bits_index, int_offset, pow(2, self.bits_offset), self.bits_offset))
+        print('     Decoded as {} tag: {}/{}({}), index: {}/{}({}), offset: {}/{}({})\n'.format(
+            action, int_tag, pow(2, self.bits_tag), self.bits_tag, int_index, pow(2,self.bits_index), self.bits_index, int_offset, pow(2, self.bits_offset), self.bits_offset))
             
         return Action.get_action_klass(action)(int_tag, int_index, int_offset)
     # end
