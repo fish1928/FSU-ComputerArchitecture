@@ -19,6 +19,15 @@ class Action:
         Action.counted_action[self.__class__.__name__] += 1
     # end
 
+    def inspect(self):
+        return {
+            'tag': self.tag,
+            'index': self.index,
+            'offset': self.offset,
+            'action': str(self.__class__).split('.')[-1][0]
+        }
+    # end
+
     @classmethod
     def add_miss(cls):
         cls.counted_miss += 1
@@ -66,19 +75,11 @@ class LoadAction(Action):
     # end
 
     def execute(self, cache: LineDataWayCache):
-        # print('LoadAction.execute')
         indicate_miss = cache.load(self.index, self.offset, self.tag)
         if cache.is_a_miss(indicate_miss):
-            # print('LoadAction: is a miss')
             Action.add_miss()
             cache.store_direct(self.index, self.offset, self.tag)
-
-            # cache.store_direct(self.index, self.offset, self.tag)
-        #     print('miss: {} {} {}'.format(self.index, self.offset, self.tag))
-        # # else:
-        #     print('hit: {} {} {}'.format(self.index, self.offset, self.tag))
         # end
-
     # end
 # end
 
@@ -90,10 +91,8 @@ class StoreAction(Action):
     # end
 
     def execute(self, cache: LineDataWayCache):
-        # print('StoreAction.execute')
         indicate_miss = cache.store(self.index, self.offset, self.tag)
         if cache.is_a_miss(indicate_miss):
-            # print('StoreAction: is a miss')
             Action.add_miss()
         # end
     # end
