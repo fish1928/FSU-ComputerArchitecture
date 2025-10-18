@@ -15,6 +15,7 @@ class Action:
         self.index = index
         self.offset = offset
 
+        # print('action {}, tag:{} index:{} offset:{}'.format(self.__class__.__name__, self.tag, self.index, self.offset))
         Action.counted_action[self.__class__.__name__] += 1
     # end
 

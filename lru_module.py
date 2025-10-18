@@ -95,6 +95,14 @@ class LRULine():
         self.index_line = index_line
     # end
 
+    def __len__(self):
+        return len(self.index_line)
+    # end
+
+    def inspect(self):
+        [u.get_id() for u in self.tail]
+    # end
+
     def get_head(self):
         return self.head
     # end
@@ -102,7 +110,6 @@ class LRULine():
     def get_tail(self):
         return self.tail
     # end
-
 
     def _set_most(self, id_target):
         current = self.index_line[id_target]
@@ -122,23 +129,23 @@ class LRULine():
         head.set_previous(current)
     # end
 
-    def _set_least(self, id_target):
-        current = self.index_line[id_target]
+    # def _set_least(self, id_target):
+    #     current = self.index_line[id_target]
 
-        # take from original location
-        current.get_previous().set_next(current.get_next())
-        current.get_next().set_previous(current.get_previous())
+    #     # take from original location
+    #     current.get_previous().set_next(current.get_next())
+    #     current.get_next().set_previous(current.get_previous())
 
-        # set to target location(behind the most/head)
-        tail = self.tail
-        next = tail.get_next()
+    #     # set to target location(behind the most/head)
+    #     tail = self.tail
+    #     next = tail.get_next()
 
-        tail.set_next(current)
-        current.set_previous(tail)
+    #     tail.set_next(current)
+    #     current.set_previous(tail)
 
-        current.set_next(next)
-        next.set_previous(current)
-    # end
+    #     current.set_next(next)
+    #     next.set_previous(current)
+    # # end
 
     def get_id_most(self):
         return self.head.get_previous().get_id()
@@ -154,11 +161,12 @@ class LRULine():
 # end
 
 class LRULine_One(LRULine):
-    def __init__(self):
+    def __init__(self, *args, **kvargs):
         head, tail, index_line = ChainLine.generate_line(1)
         self.head = head
         self.tail = tail
         self.target = self.tail.get_next()
+        self.index_line = index_line
     # end
 
     def get_head(self):
@@ -188,6 +196,7 @@ class LRULine_One(LRULine):
     def set_id_to_most(self, id_target):
         pass
     # end
+# end
 
 
 
@@ -212,7 +221,7 @@ class NwayLRU():
 
         index_lines = [None] * n_lines
         for i in range(len(index_lines)):
-            index_lines[i] = LRULine(n_ways)
+            index_lines[i] = class_line_target(n_ways)
         # end
 
         self.index_lines = index_lines
@@ -228,4 +237,9 @@ class NwayLRU():
        line_target.set_id_to_most(id_least)
        return id_least
     # end
+
+    def shape(self):
+        return (len(self.index_lines), len(self.index_lines[0])-2)
+    # end
+
 # end

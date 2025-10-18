@@ -49,12 +49,11 @@ if __name__ == "__main__":
 
     cs = 4096
     bs = 32  # bs = 2^bits_bs
-    w = 0
+    w = 1
     cache, decoder = factory(cs, bs, w)
 
     # str_instruction = 'L 8 12ff228'
     # action = decoder.decode(str_instruction)
-    # print(cache.shape())
     # exit(0)
 
     with open(path_data,'r') as file:

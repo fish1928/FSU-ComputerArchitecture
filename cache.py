@@ -27,6 +27,7 @@ class LineDataWayCache:
         print('initialize cache with {} {} {} {}'.format(num_line_per_way, size_data_cache_b, n_ways, str_type_np))
         self.cache = np.zeros((num_line_per_way, size_data_cache_b, n_ways), dtype=str_type_np)  # save tags
         self.lru = NwayLRU(num_line_per_way, n_ways)
+        print('initialize lru module with {}'.format(self.lru.shape()))
     # end
 
     def shape(self):
@@ -34,12 +35,6 @@ class LineDataWayCache:
     # end
 
     def load(self, index, offset, tag):
-
-        # # Special Patch for 0-ways fully associate
-        # if index > self.num_line_per_way:
-        #     index = 0
-        # # end
-
         data_ways_all = self.cache[index][offset]   # size->(n_ways,)
         indicates_hit = np.where(data_ways_all == tag)[0]
         if indicates_hit.size == 0: # is miss
