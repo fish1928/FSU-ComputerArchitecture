@@ -13,15 +13,20 @@ def factory(cs, bs, w, b = 32) -> Tuple[LineDataWayCache, InstructionDecoder]:
     # rename all parameters using me-style
     size_cache_total_kb = cs
     size_data_cache_b = bs
-    n_ways = 1
+    n_ways = w
     bits_address = b
 
     del cs, bs, w, b
 
     size_cache_total_b = 1024 * size_cache_total_kb
-    num_lines_total = size_cache_total_b / size_data_cache_b
+    num_lines_total = int(size_cache_total_b / size_data_cache_b)
 
-    num_line_per_way = 1 if n_ways == 0 else int(num_lines_total / n_ways)
+    if n_ways == 0:
+        num_line_per_way = 1
+        n_ways = num_lines_total
+    else:
+        num_line_per_way = int(num_lines_total / n_ways)
+    # end
 
     # address = { tag | index | offset }
     bits_index = int(math.log(num_line_per_way, 2))
@@ -42,24 +47,25 @@ if __name__ == "__main__":
     i = 'gcc-1K.memtrace'
     path_data = os.path.join(path_base, i)
 
-    cs = 512
+    cs = 4096
     bs = 32  # bs = 2^bits_bs
     w = 0
     cache, decoder = factory(cs, bs, w)
 
-    str_instruction = 'L 8 12ff228'
-    action = decoder.decode(str_instruction)
-    exit(0)
+    # str_instruction = 'L 8 12ff228'
+    # action = decoder.decode(str_instruction)
+    # print(cache.shape())
+    # exit(0)
 
-    # with open(path_data,'r') as file:
-    #     strs_instruction = file.read().splitlines()
-    #     for str_instruction in tqdm(strs_instruction):
-    #     # for i, str_instruction in enumerate(strs_instruction[:]):
-    #         # print('[{}]: {}'.format(i, str_instruction))
-    #         action = decoder.decode(str_instruction)
-    #         action.execute(cache)
-    #     # end
-    # # end
+    with open(path_data,'r') as file:
+        strs_instruction = file.read().splitlines()
+        for str_instruction in tqdm(strs_instruction):
+        # for i, str_instruction in enumerate(strs_instruction[:]):
+        #     print('[{}]: {}'.format(i, str_instruction))
+            action = decoder.decode(str_instruction)
+            action.execute(cache)
+        # end
+    # end
 
     print(Action.counted_action)
     print(Action.counted_miss)

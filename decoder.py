@@ -17,7 +17,7 @@ class InstructionDecoder:
         address_32bits = self._patch_binary_str(address_binary, self.__class__.BITS_ADDRESS_DEFAULT)
 
         int_tag = int(address_32bits[:self.bits_tag], 2)
-        int_index = int(address_32bits[self.bits_tag:self.bits_tag + self.bits_index], 2)
+        int_index = int(address_32bits[self.bits_tag:self.bits_tag + self.bits_index], 2) if self.bits_index else 0
         int_offset = int(address_32bits[self.bits_tag + self.bits_index:], 2)
 
         # if int_offset % 2 == 1:

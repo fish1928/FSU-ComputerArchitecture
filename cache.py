@@ -16,13 +16,30 @@ class LineDataWayCache:
         if bits_np > 64:
             raise Exception()
         # end
-        str_type_np = 'int{}'.format(bits_np)
+        str_type_np = 'uint{}'.format(bits_np)
 
+        self.num_line_per_way = num_line_per_way
+        self.size_data_cache_b = size_data_cache_b
+        self.n_ways = n_ways
+        self.bits_tag = bits_tag
+        self.str_type_np = str_type_np
+
+        print('initialize cache with {} {} {} {}'.format(num_line_per_way, size_data_cache_b, n_ways, str_type_np))
         self.cache = np.zeros((num_line_per_way, size_data_cache_b, n_ways), dtype=str_type_np)  # save tags
         self.lru = NwayLRU(num_line_per_way, n_ways)
     # end
 
+    def shape(self):
+        return self.cache.shape
+    # end
+
     def load(self, index, offset, tag):
+
+        # # Special Patch for 0-ways fully associate
+        # if index > self.num_line_per_way:
+        #     index = 0
+        # # end
+
         data_ways_all = self.cache[index][offset]   # size->(n_ways,)
         indicates_hit = np.where(data_ways_all == tag)[0]
         if indicates_hit.size == 0: # is miss
