@@ -47,8 +47,8 @@ if __name__ == "__main__":
     i = 'gcc-1K.memtrace'
     path_data = os.path.join(path_base, i)
 
-    cs = 16
-    bs = 2  # bs = 2^bits_bs
+    cs = 32
+    bs = 16  # bs = 2^bits_bs
     w = 4
     cache, decoder = factory(cs, bs, w)
 

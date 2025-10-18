@@ -69,6 +69,7 @@ class LoadAction(Action):
         indicate_miss = cache.load(self.index, self.offset, self.tag)
         if cache.is_a_miss(indicate_miss):
             Action.add_miss()
+            # cache.store_direct(self.index, self.offset, self.tag)
         #     print('miss: {} {} {}'.format(self.index, self.offset, self.tag))
         # # else:
         #     print('hit: {} {} {}'.format(self.index, self.offset, self.tag))

@@ -58,5 +58,11 @@ class LineDataWayCache:
             return indicates_hit[0]
         # end
     # end
+
+    def store_direct(self, index, offset, tag):
+        data_ways_all = self.cache[index][offset]   # size->(n_ways,)
+        indicate_least_use = self.lru.find_and_replace(index)
+        data_ways_all[indicate_least_use] = tag
+    # end
 # end
 
