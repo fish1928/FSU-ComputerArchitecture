@@ -52,10 +52,6 @@ if __name__ == "__main__":
     w = 4
     cache, decoder = factory(cs, bs, w)
 
-    # str_instruction = 'L 8 12ff228'
-    # action = decoder.decode(str_instruction)
-    # exit(0)
-
     with open(path_data,'r') as file:
         strs_instruction = file.read().splitlines()
         for str_instruction in strs_instruction:
