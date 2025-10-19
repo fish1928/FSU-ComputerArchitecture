@@ -8,38 +8,9 @@ from collections import defaultdict
 from cache import LineDataWayCache
 from decoder import InstructionDecoder
 from actions import Action
+from factory import generate_components
 import json
 
-def factory(cs, bs, w, b = 32) -> Tuple[LineDataWayCache, InstructionDecoder]:
-
-    # rename all parameters using me-style
-    size_cache_total_kb = cs
-    size_data_cache_b = bs
-    n_ways = w
-    bits_address = b
-
-    del cs, bs, w, b
-
-    size_cache_total_b = 1024 * size_cache_total_kb
-    num_lines_total = int(size_cache_total_b / size_data_cache_b)
-
-    if n_ways == 0:
-        num_line_per_way = 1
-        n_ways = num_lines_total
-    else:
-        num_line_per_way = int(num_lines_total / n_ways)
-    # end
-
-    # address = { tag | index | offset }
-    bits_index = int(math.log(num_line_per_way, 2))
-    bits_offset = int(math.log(size_data_cache_b, 2))
-    bits_tag = bits_address - bits_index - bits_offset
-
-    cache = LineDataWayCache(num_line_per_way, size_data_cache_b, n_ways, bits_tag)
-    decoder = InstructionDecoder(bits_tag, bits_index, bits_offset)
-
-    return cache, decoder
-# end
 
 
 
@@ -53,10 +24,9 @@ if __name__ == "__main__":
     bs = 16  # bs = 2^bits_bs
     w = 1
 
-    cache, decoder = factory(cs, bs, w)
+    cache, victim, decoder = generate_components(cs, bs, w)
 
     list_state = []
-
 
     with open(path_data,'r') as file:
         strs_instruction = file.read().splitlines()
@@ -65,7 +35,7 @@ if __name__ == "__main__":
         # for i, str_instruction in enumerate(strs_instruction[:]):
         #     print('[{}]: {}'.format(i, str_instruction))
             action = decoder.decode(str_instruction)
-            action.execute(cache)
+            action.execute(cache, victim)
             list_state.append(action.inspect())
         # end
     # end

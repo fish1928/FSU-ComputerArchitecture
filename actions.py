@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from collections import defaultdict
 
-from cache import LineDataWayCache
+from cache import LineDataWayCache, VictimCache
 
 
 class Action:
@@ -67,33 +67,105 @@ class Action:
     # end
 # end
 
-class LoadAction(Action):
+# class LoadActionOld(Action):
 
+#     @classmethod
+#     def register_action(cls):
+#         return 'LOld'
+#     # end
+
+#     def execute(self, cache: LineDataWayCache):
+#         indicate_miss = cache.load(self.index, self.offset, self.tag)
+#         if cache.is_a_miss(indicate_miss):
+#             Action.add_miss()
+#             cache.store_direct(self.index, self.offset, self.tag)
+#         # end
+#     # end
+# # end
+
+# class StoreActionOld(Action):
+
+#     @classmethod
+#     def register_action(cls):
+#         return 'SOld'
+#     # end
+
+#     def execute(self, cache: LineDataWayCache):
+#         indicate_miss, tag_removed = cache.store(self.index, self.offset, self.tag)
+
+#         if cache.is_a_miss(indicate_miss):
+#             Action.add_miss()
+#         # end
+#     # end
+# # end
+
+class LoadAction(Action):
     @classmethod
     def register_action(cls):
         return 'L'
     # end
 
-    def execute(self, cache: LineDataWayCache):
-        indicate_miss = cache.load(self.index, self.offset, self.tag)
-        if cache.is_a_miss(indicate_miss):
-            Action.add_miss()
-            cache.store_direct(self.index, self.offset, self.tag)
+    def execute(self, cache: LineDataWayCache, victim: VictimCache = None):
+        indicate_target, indicate_least = cache.lookup(self.index, self.offset, self.tag)
+        if not cache.is_a_miss(indicate_target):
+            cache.touch(self.index, indicate_target) # -> will update lru
+            return
         # end
+
+        # there is a load miss
+        if not victim:
+            cache.store_direct(self.index, self.offset, self.tag, indicate_least) # -> will update lru
+            Action.add_miss()
+            return
+        # end
+
+        # if victim
+        indicate_victim, indicate_victim_least = victim.lookup(self.tag)
+        if victim.is_a_miss(indicate_victim):
+            tag_removed = cache.store_direct(self.index, self.offset, self.tag, indicate_least) # -> update lru
+            if tag_removed:
+                victim.store_direct(tag_removed, indicate_victim_least)                             # -> update lru
+            # end
+            Action.add_miss()
+            return
+        # end
+
+        victim.touch(indicate_victim)
     # end
 # end
 
-class StoreAction(Action):
 
+class StoreAction(Action):
     @classmethod
     def register_action(cls):
         return 'S'
     # end
 
-    def execute(self, cache: LineDataWayCache):
-        indicate_miss = cache.store(self.index, self.offset, self.tag)
-        if cache.is_a_miss(indicate_miss):
-            Action.add_miss()
+    def execute(self, cache: LineDataWayCache, victim: VictimCache = None):
+        indicate_target, indicate_least = cache.lookup(self.index, self.offset, self.tag)
+        if not cache.is_a_miss(indicate_target):
+            cache.store_direct(self.index, self.offset, self.tag, indicate_target) # -> will update lru
+            return
         # end
+
+        # there is a store miss
+        if not victim:
+            cache.store_direct(self.index, self.offset, self.tag, indicate_least) # -> will update lru
+            Action.add_miss()
+            return
+        # end
+
+        # if victim
+        indicate_victim, indicate_victim_least = victim.lookup(self.tag)
+        if victim.is_a_miss(indicate_victim):
+            tag_removed = cache.store_direct(self.index, self.offset, self.tag, indicate_least) # -> update lru
+            if tag_removed:
+                victim.store_direct(tag_removed, indicate_victim_least)                             # -> update lru
+            # end
+            Action.add_miss()
+            return
+        # end
+
+        victim.touch(indicate_victim)
     # end
 # end
