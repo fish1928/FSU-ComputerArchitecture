@@ -124,6 +124,7 @@ class LoadAction(Action):
         if victim.is_a_miss(indicate_victim):
             tag_removed = cache.store_direct(self.index, self.offset, self.tag, indicate_least) # -> update lru
             if tag_removed:
+                print('LoadAction.execute: swiped out {}!!!'.format(self.tag))
                 victim.store_direct(tag_removed, indicate_victim_least)                             # -> update lru
             # end
             Action.add_miss()
@@ -159,7 +160,8 @@ class StoreAction(Action):
         indicate_victim, indicate_victim_least = victim.lookup(self.tag)
         if victim.is_a_miss(indicate_victim):
             tag_removed = cache.store_direct(self.index, self.offset, self.tag, indicate_least) # -> update lru
-            if tag_removed:
+            if tag_removed:         # swiped out
+                print('StoreAction.execute: swiped out {}!!!'.format(self.tag))
                 victim.store_direct(tag_removed, indicate_victim_least)                             # -> update lru
             # end
             Action.add_miss()

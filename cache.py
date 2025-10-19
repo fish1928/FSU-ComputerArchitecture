@@ -52,7 +52,7 @@ class LineDataWayCache:
         tag_removed = data_ways_all[indicate_target]
         data_ways_all[indicate_target] = tag
 
-        self.touch(index, indicate_target)
+        LineDataWayCache.touch(self, index, indicate_target)    # self.touch might call child function
         return tag_removed
     # end
 
@@ -114,11 +114,16 @@ class VictimCache(LineDataWayCache):
     # end
 
     def lookup(self, tag):
-        print('VictimCache.lookup {}'.format(tag))
+        # print('VictimCache.lookup {} in {}'.format(tag, [self.cache[0][0][i] for i in self.lru.index_lines[0].inspect()[1:-1]]))
         return super().lookup(VictimCache.INDEX_VICTIM_DEFAULT, VictimCache.OFFSET_VICTIM_DEFAULT, tag)
     # end
 
     def store_direct(self, tag, indicate_target):
-        print('VictimCache.store_direct {}'.format(tag, indicate_target))
+        # print('VictimCache.store_direct {}'.format(tag, indicate_target))
         return super().store_direct(VictimCache.INDEX_VICTIM_DEFAULT, VictimCache.OFFSET_VICTIM_DEFAULT, tag, indicate_target)
     # end
+
+    def touch(self, indicate_target):
+        return super().touch(VictimCache.INDEX_VICTIM_DEFAULT, indicate_target)
+    # end
+# end

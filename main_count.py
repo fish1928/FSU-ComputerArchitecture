@@ -23,8 +23,9 @@ if __name__ == "__main__":
     cs = 128
     bs = 16  # bs = 2^bits_bs
     w = 1
+    v = 2
 
-    cache, victim, decoder = generate_components(cs, bs, w)
+    cache, victim, decoder = generate_components(cs, bs, w, v)
 
     list_state = []
 
