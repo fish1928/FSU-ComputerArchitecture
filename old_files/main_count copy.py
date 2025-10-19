@@ -32,9 +32,6 @@ if __name__ == "__main__":
     with open(path_data,'r') as file:
         strs_instruction = file.read().splitlines()
         for str_instruction in strs_instruction:
-        # for str_instruction in tqdm(strs_instruction):
-        # for i, str_instruction in enumerate(strs_instruction[:]):
-        #     print('[{}]: {}'.format(i, str_instruction))
             action = decoder.decode(str_instruction)
             action.execute(cache, victim)
             list_state.append(action.inspect())

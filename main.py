@@ -1,67 +1,120 @@
 import os
-import math
-import numpy as np
-from typing import Tuple
-from tqdm import tqdm
+import sys
+import argparse
+from dataclasses import dataclass
 
-from cache import LineDataWayCache
-from decoder import InstructionDecoder
 from actions import Action
+from factory import generate_components
 
-def factory(cs, bs, w, b = 32) -> Tuple[LineDataWayCache, InstructionDecoder]:
+@dataclass
+class Config:
+    BS_VALID = [2,4,8,16,32,64]
+    WAYS_VALID = [0,1,2,4,8,16]
+    CS_RANGE_VALID = range(1,4096+1)
+    VICTIM_RANGE_VALID = range(1, 1024+1)
 
-    # rename all parameters using me-style
-    size_cache_total_kb = cs
-    size_data_cache_b = bs
-    n_ways = w
-    bits_address = b
+    i: str
+    cs: int
+    bs: int
+    w: int
+    v: int = 0
+# end
 
-    del cs, bs, w, b
+def generate_parser():
+    parser = argparse.ArgumentParser(
+        prog='main.py',
+        description='Cache simulator parameters',
+        formatter_class=argparse.RawTextHelpFormatter
+    )
 
-    size_cache_total_b = 1024 * size_cache_total_kb
-    num_lines_total = int(size_cache_total_b / size_data_cache_b)
+    parser.add_argument('-i', required=True, type=str, help='Input file')
+    parser.add_argument('-cs', required=True, type=int, choices=Config.CS_RANGE_VALID, metavar='[1-4096]', help='Total Cache Size(KB)')
+    parser.add_argument('-bs', required=True, type=int, choices=Config.BS_VALID, help='Cache Block Size(B), {}'.format(Config.BS_VALID))
+    parser.add_argument('-w', required=True, type=int, choices=Config.WAYS_VALID, help='Number of Ways {}, 0: fully associate, 1: direct mapping'.format(Config.WAYS_VALID))
+    parser.add_argument('-v', type=int, choices=Config.VICTIM_RANGE_VALID, metavar='[1-1024]',help='(Optional) Victim Cache Size(lines)')
 
-    if n_ways == 0:
-        num_line_per_way = 1
-        n_ways = num_lines_total
-    else:
-        num_line_per_way = int(num_lines_total / n_ways)
+    return parser
+# end
+
+def parse_args(argv: list[str]) -> Config:
+    parser = generate_parser()
+    args = parser.parse_known_args(argv)[0]
+
+    config = Config(
+        i=args.i,
+        cs=args.cs,
+        bs=args.bs,
+        w=args.w
+    )
+    if args.v:
+        config.v = args.v
     # end
 
-    # address = { tag | index | offset }
-    bits_index = int(math.log(num_line_per_way, 2))
-    bits_offset = int(math.log(size_data_cache_b, 2))
-    bits_tag = bits_address - bits_index - bits_offset
+    return config
+# end
 
-    cache = LineDataWayCache(num_line_per_way, size_data_cache_b, n_ways, bits_tag)
-    decoder = InstructionDecoder(bits_tag, bits_index, bits_offset)
 
-    return cache, decoder
+def main(argv):
+    config = parse_args(argv)
+
+    i = config.i
+    cs = config.cs
+    bs = config.bs
+    w = config.w
+    v = config.v
+
+    cache, victim, decoder = generate_components(cs, bs, w, v)
+    with open(i,'r') as file:
+        strs_instruction = file.read().splitlines()
+        for str_instruction in strs_instruction:
+            action = decoder.decode(str_instruction)
+            action.execute(cache, victim)
+        # end
+    # end
+
+    count_miss = Action.counted_miss
+    count_all = sum(Action.counted_action.values())
+    count_hit = count_all - count_miss
+    rate_miss = count_miss / count_all
+
+    bits_index = decoder.bits_index
+    bits_offset = decoder.bits_offset
+    bits_tag = decoder.bits_tag
+
+    # prepare to print
+    annotation_way = None
+    match w:
+        case 0:
+            annotation_way = 'fully-associative'
+        case 1:
+            annotation_way = 'direct-mapped associativity'
+        case _:
+            annotation_way = 'Number of ways = {}'.format(w)
+        # end
+    # end
+
+
+    print('**********************')
+    print('file name: {}'.format(i))
+    print('Cache Size = {} KB'.format(cs))
+    print('Block Size = {} B'.format(bs))
+    print(annotation_way)
+    print('Number of Victim Cache = {}'.format(v))
+    print('numOfOffsetBits = {}'.format(bits_offset))
+    print('numOfIndexBits = {}'.format(bits_index))
+    print('numOfTagBits = {}'.format(bits_tag))
+    print()
+    print('Cache hit count = {}'.format(count_hit))
+    print('Cache miss count = {}'.format(count_miss))
+    print('Instruction count = {}'.format(count_all))
+    print('Cache miss rate = {:0.2f}%'.format(rate_miss*100))
+    print('**********************')
 # end
 
 
 
+
+
 if __name__ == "__main__":
-
-    path_base = 'data'
-    i = 'gcc-1K.memtrace'
-    path_data = os.path.join(path_base, i)
-
-    cs = 32
-    bs = 32  # bs = 2^bits_bs
-    w = 1
-    cache, decoder = factory(cs, bs, w)
-
-    with open(path_data,'r') as file:
-        strs_instruction = file.read().splitlines()
-        for str_instruction in strs_instruction:
-        # for str_instruction in tqdm(strs_instruction):
-        # for i, str_instruction in enumerate(strs_instruction[:]):
-        #     print('[{}]: {}'.format(i, str_instruction))
-            action = decoder.decode(str_instruction)
-            action.execute(cache)
-        # end
-    # end
-
-    print('miss rate: {}'.format(Action.counted_miss/sum(Action.counted_action.values())))
+    main(sys.argv)
 # end

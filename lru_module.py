@@ -235,13 +235,6 @@ class NwayLRU():
         return self.index_lines[id_line].get_id_least()
     # end
 
-    # def find_and_replace_v1(self, id_line) -> int:
-    #    line_target = self.index_lines[id_line]
-    #    id_least = line_target.get_id_least()
-    #    line_target.set_id_to_most(id_least)
-    #    return id_least
-    # # end
-
     def shape(self):
         return (len(self.index_lines), len(self.index_lines[0])-2)
     # end

@@ -1,0 +1,259 @@
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-10K.memtrace' -cs 512 -bs 16 -w 1
+**********************
+file name: data/gcc-10K.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+direct-mapped associativity
+Number of Victim Cache = 0
+numOfOffsetBits = 4
+numOfIndexBits = 15
+numOfTagBits = 13
+
+Cache hit count = 8919
+Cache miss count = 1081
+Instruction count = 10000
+Cache miss rate = 10.81%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-10K.memtrace' -cs 512 -bs 16 -w 0
+**********************
+file name: data/gcc-10K.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+fully-associative
+Number of Victim Cache = 0
+numOfOffsetBits = 4
+numOfIndexBits = 0
+numOfTagBits = 28
+
+Cache hit count = 8920
+Cache miss count = 1080
+Instruction count = 10000
+Cache miss rate = 10.80%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-10K.memtrace' -cs 512 -bs 16 -w 2
+**********************
+file name: data/gcc-10K.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+Number of ways = 2
+Number of Victim Cache = 0
+numOfOffsetBits = 4
+numOfIndexBits = 14
+numOfTagBits = 14
+
+Cache hit count = 8920
+Cache miss count = 1080
+Instruction count = 10000
+Cache miss rate = 10.80%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-10K.memtrace' -cs 512 -bs 16 -w 4
+**********************
+file name: data/gcc-10K.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+Number of ways = 4
+Number of Victim Cache = 0
+numOfOffsetBits = 4
+numOfIndexBits = 13
+numOfTagBits = 15
+
+Cache hit count = 8920
+Cache miss count = 1080
+Instruction count = 10000
+Cache miss rate = 10.80%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-1M.memtrace' -cs 512 -bs 16 -w 4
+**********************
+file name: data/gcc-1M.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+Number of ways = 4
+Number of Victim Cache = 0
+numOfOffsetBits = 4
+numOfIndexBits = 13
+numOfTagBits = 15
+
+Cache hit count = 1518096
+Cache miss count = 18678
+Instruction count = 1536774
+Cache miss rate = 1.22%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-1M.memtrace' -cs 512 -bs 16 -w 2
+**********************
+file name: data/gcc-1M.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+Number of ways = 2
+Number of Victim Cache = 0
+numOfOffsetBits = 4
+numOfIndexBits = 14
+numOfTagBits = 14
+
+Cache hit count = 1517440
+Cache miss count = 19334
+Instruction count = 1536774
+Cache miss rate = 1.26%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-1M.memtrace' -cs 512 -bs 16 -w 1
+**********************
+file name: data/gcc-1M.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+direct-mapped associativity
+Number of Victim Cache = 0
+numOfOffsetBits = 4
+numOfIndexBits = 15
+numOfTagBits = 13
+
+Cache hit count = 1515858
+Cache miss count = 20916
+Instruction count = 1536774
+Cache miss rate = 1.36%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-1M.memtrace' -cs 512 -bs 16 -w 0
+**********************
+file name: data/gcc-1M.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+fully-associative
+Number of Victim Cache = 0
+numOfOffsetBits = 4
+numOfIndexBits = 0
+numOfTagBits = 28
+
+Cache hit count = 1518410
+Cache miss count = 18364
+Instruction count = 1536774
+Cache miss rate = 1.19%
+
+----------Victim Cache = 4 ------------
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-10K.memtrace' -cs 512 -bs 16 -w 2 -v 4
+**********************
+file name: data/gcc-10K.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+Number of ways = 2
+Number of Victim Cache = 4
+numOfOffsetBits = 4
+numOfIndexBits = 14
+numOfTagBits = 14
+
+Cache hit count = 8946
+Cache miss count = 1054
+Instruction count = 10000
+Cache miss rate = 10.54%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-10K.memtrace' -cs 512 -bs 16 -w 4 -v 4
+**********************
+file name: data/gcc-10K.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+Number of ways = 4
+Number of Victim Cache = 4
+numOfOffsetBits = 4
+numOfIndexBits = 13
+numOfTagBits = 15
+
+Cache hit count = 8920
+Cache miss count = 1080
+Instruction count = 10000
+Cache miss rate = 10.80%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-10K.memtrace' -cs 512 -bs 16 -w 1 -v 4
+**********************
+file name: data/gcc-10K.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+direct-mapped associativity
+Number of Victim Cache = 4
+numOfOffsetBits = 4
+numOfIndexBits = 15
+numOfTagBits = 13
+
+Cache hit count = 9086
+Cache miss count = 914
+Instruction count = 10000
+Cache miss rate = 9.14%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-10K.memtrace' -cs 512 -bs 16 -w 0 -v 4
+**********************
+file name: data/gcc-10K.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+fully-associative
+Number of Victim Cache = 4
+numOfOffsetBits = 4
+numOfIndexBits = 0
+numOfTagBits = 28
+
+Cache hit count = 8920
+Cache miss count = 1080
+Instruction count = 10000
+Cache miss rate = 10.80%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-1M.memtrace' -cs 512 -bs 16 -w 0 -v 4 
+**********************
+file name: data/gcc-1M.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+fully-associative
+Number of Victim Cache = 4
+numOfOffsetBits = 4
+numOfIndexBits = 0
+numOfTagBits = 28
+
+Cache hit count = 1518410
+Cache miss count = 18364
+Instruction count = 1536774
+Cache miss rate = 1.19%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-1M.memtrace' -cs 512 -bs 16 -w 1 -v 4
+**********************
+file name: data/gcc-1M.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+direct-mapped associativity
+Number of Victim Cache = 4
+numOfOffsetBits = 4
+numOfIndexBits = 15
+numOfTagBits = 13
+
+Cache hit count = 1522854
+Cache miss count = 13920
+Instruction count = 1536774
+Cache miss rate = 0.91%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-1M.memtrace' -cs 512 -bs 16 -w 2 -v 4
+**********************
+file name: data/gcc-1M.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+Number of ways = 2
+Number of Victim Cache = 4
+numOfOffsetBits = 4
+numOfIndexBits = 14
+numOfTagBits = 14
+
+Cache hit count = 1526417
+Cache miss count = 10357
+Instruction count = 1536774
+Cache miss rate = 0.67%
+**********************
+(base) yukai@Mac ComArchi % /Users/yukai/miniconda3/bin/python /Users/yukai/Workspace/ComArchi/main.py -i 'data/gcc-1M.memtrace' -cs 512 -bs 16 -w 4 -v 4
+**********************
+file name: data/gcc-1M.memtrace
+Cache Size = 512 KB
+Block Size = 16 B
+Number of ways = 4
+Number of Victim Cache = 4
+numOfOffsetBits = 4
+numOfIndexBits = 13
+numOfTagBits = 15
+
+Cache hit count = 1525088
+Cache miss count = 11686
+Instruction count = 1536774
+Cache miss rate = 0.76%
+**********************
+(base) yukai@Mac ComArchi % 
+
