@@ -28,6 +28,13 @@ class Action:
     # end
 
     @classmethod
+    def clear_state(cls):
+        cls.index_type_action = {}
+        cls.counted_action = defaultdict(int)
+        cls.counted_miss = 0
+    # end
+
+    @classmethod
     def add_miss(cls):
         cls.counted_miss += 1
     # end

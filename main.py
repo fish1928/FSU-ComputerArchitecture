@@ -109,11 +109,8 @@ def main(argv):
     print('Instruction count = {}'.format(count_all))
     print('Cache miss rate = {:0.2f}%'.format(rate_miss*100))
     print('**********************')
+    Action.clear_state()
 # end
-
-
-
-
 
 if __name__ == "__main__":
     main(sys.argv)
