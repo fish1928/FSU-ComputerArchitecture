@@ -189,24 +189,55 @@ class Pipeline:
     # Data hazard detection between ID (DECODE) and later stages
     def hasDependency(self) -> bool:
         dec = self.pipeline[Stage.DECODE]
+
         if dec.inst is None or dec.inst.type == InstructionType.NOP:
             return False
+        # end
+
         for i in (Stage.EXEC, Stage.MEM, Stage.WB):
+
             st = self.pipeline[i]
             if st.inst is None:
                 continue
+            # end
+
             if st.inst.type == InstructionType.NOP:
                 continue
+            # end
+
             # RAW hazard
             if st.inst.dest != -1 and (st.inst.dest == dec.inst.src1 or st.inst.dest == dec.inst.src2):
                 # The C++ provided skeleton leaves forwarding behavior to be filled.
                 # We mirror that: if any window width is used, we still stall.
-                if self.forwarding and self.forwardingWindowWidth in (1, 2):
-                    # TODO: implement actual forwarding windows; keeping parity with original (stall)
+                if not self.forwarding:
                     return True
-                # forwarding disabled or unsupported width -> stall
-                return True
+                # end
+
+                match self.forwardingWindowWidth:
+                    case 0:
+                        return True
+                    case 1:
+                        if i in {Stage.WB} and st.inst.type in {InstructionType.ADD, InstructionType.DIV, InstructionType.MULT, InstructionType.SUB}:
+                            return True
+                        # end
+
+                        if i in {Stage.MEM, Stage.WB} and st.inst.type in {InstructionType.LW}:
+                            return True
+                        # end
+
+                    case 2:
+                        if i in {Stage.MEM} and st.inst.type in {InstructionType.LW}:
+                            return True
+                        # end
+
+                    case _:
+                        return True
+                    # end
+                # end match
+            # end if
+        # end for
         return False
+    # end
 
     def cycle(self) -> None:
         self.cycleTime += 1
@@ -226,6 +257,7 @@ class Pipeline:
             # insert bubble into EXEC
             self.pipeline[Stage.EXEC].addInstruction(Instruction())
             return
+        # end
 
         # ID -> EXEC
         self.pipeline[Stage.EXEC].addInstruction(self.pipeline[Stage.DECODE].inst)
@@ -267,7 +299,6 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
 
 def main(argv: List[str]) -> int:
     ns = parse_args(argv)
-    print(ns)
     fileName = ns.file
     forwarding = ns.forwarding
     width = ns.width
